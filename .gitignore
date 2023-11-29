@@ -2,6 +2,7 @@
 .idea
 .env
 
+/web/assets
 # netbeans project files
 nbproject
 
