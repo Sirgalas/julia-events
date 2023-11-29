@@ -39,12 +39,6 @@ services:
       - db
     networks:
       - internal
-  redis:
-    image: "redis"
-    ports:
-      - ${REDIS_PORT}:6379
-    networks:
-      - internal
 networks:
   internal:
     driver: bridge
