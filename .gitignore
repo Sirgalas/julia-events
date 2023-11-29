@@ -2,6 +2,9 @@
 .idea
 .env
 
+/config/db.php
+/config/params.php
+
 /web/assets
 # netbeans project files
 nbproject
