@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\Entities\Event\Forms;
+namespace app\Entities\Events\Forms;
 
-use app\Entities\Event\Entities\Events;
+use app\Entities\Events\Entities\Events;
 use yii\base\Model;
 
 /**

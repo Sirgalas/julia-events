@@ -1,9 +1,8 @@
 <?php
 
-namespace app\Entities\Event\Entities;
+namespace app\Entities\Events\Entities;
 
 use app\Entities\Event\Forms\CreateForm;
-use app\Entities\Event\Forms\UpdateForm;
 use app\Entities\Managers\Entities\Managers;
 use Yii;
 use yii\db\ActiveQuery;
@@ -29,7 +28,7 @@ class Events extends \yii\db\ActiveRecord
         return $event;
     }
 
-    public function edit(UpdateForm $form): void
+    public function edit(CreateForm $form): void
     {
         $this->date = $form->date;
         $this->description = $form->description;

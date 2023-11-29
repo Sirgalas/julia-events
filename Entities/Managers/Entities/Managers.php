@@ -2,7 +2,7 @@
 
 namespace app\Entities\Managers\Entities;
 
-use app\Entities\Event\Entities\Events;
+use app\Entities\Events\Entities\Events;
 use app\Entities\Managers\Forms\CreateForm;
 use Yii;
 use yii\db\ActiveQuery;

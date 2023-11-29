@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\Entities\Event\Repositories;
+namespace app\Entities\Events\Repositories;
 
-use app\Entities\Event\Entities\Events;
+use app\Entities\Events\Entities\Events;
 use app\Helpers\ErrorHelpers;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;

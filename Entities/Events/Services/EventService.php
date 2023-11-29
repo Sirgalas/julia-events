@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\Entities\Event;
+namespace app\Entities\Events;
 
-use app\Entities\Event\Entities\Events;
-use app\Entities\Event\Forms\CreateForm;
-use app\Entities\Event\Forms\UpdateForm;
-use app\Entities\Event\Repositories\EventRepository;
+use app\Entities\Events\Entities\Events;
+use app\Entities\Events\Forms\CreateForm;
+use app\Entities\Events\Repositories\EventRepository;
 
 class EventService
 {
@@ -25,7 +24,7 @@ class EventService
         return $this->repository->save($events);
     }
 
-    public function update(Events $event, UpdateForm $form): void
+    public function update(Events $event, CreateForm $form): void
     {
         $event->edit($form);
         $this->repository->save($event);
