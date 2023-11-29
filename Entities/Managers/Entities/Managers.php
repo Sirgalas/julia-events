@@ -2,7 +2,10 @@
 
 namespace app\Entities\Managers\Entities;
 
+use app\Entities\Event\Entities\Events;
+use app\Entities\Managers\Forms\CreateForm;
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "managers".
@@ -13,28 +16,31 @@ use Yii;
  * @property string|null $phone
  *
  * @property Events[] $events
- * @property ManagersEvents[] $managersEvents
  */
 class Managers extends \yii\db\ActiveRecord
 {
+    public static function create(CreateForm $form): self
+    {
+        $manager = new static();
+        $manager->name = $form->name;
+        $manager->email = $form->email;
+        $manager->phone = $form->phone;
+        return $manager;
+    }
+
+    public function edit(CreateForm $form):void
+    {
+        $this->name = $form->name;
+        $this->email = $form->email;
+        $this->phone = $form->phone;
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'managers';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['name'], 'string', 'max' => 512],
-            [['email'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max' => 20],
-        ];
     }
 
     /**
@@ -50,23 +56,11 @@ class Managers extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Events]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEvents()
+
+    public function getEvents():ActiveQuery
     {
         return $this->hasMany(Events::class, ['id' => 'events_id'])->viaTable('managers_events', ['managers_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[ManagersEvents]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getManagersEvents()
-    {
-        return $this->hasMany(ManagersEvents::class, ['managers_id' => 'id']);
-    }
+
 }
