@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\Entities\Events;
+namespace app\Entities\Events\Services;
 
 use app\Entities\Events\Entities\Events;
 use app\Entities\Events\Forms\CreateForm;
@@ -10,7 +10,7 @@ use app\Entities\Events\Repositories\EventRepository;
 
 class EventService
 {
-    private EventRepository $repository;
+    public EventRepository $repository;
 
     public function __construct(EventRepository $repository)
     {

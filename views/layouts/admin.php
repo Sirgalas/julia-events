@@ -39,8 +39,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Admin', 'url' => ['/admin/site/index']],
+            ['label' => 'Event', 'url' => ['/admin/events']],
+            ['label' => 'Managers', 'url' => ['/admin/managers']],
 
         ]
     ]);
@@ -62,7 +62,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <div class="container">
         <div class="row text-muted">
             <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
         </div>
     </div>
 </footer>

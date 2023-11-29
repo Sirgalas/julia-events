@@ -3,7 +3,10 @@
 namespace app\controllers\admin;
 
 use app\Entities\Managers\Entities\Managers;
+use app\Entities\Managers\Forms\CreateForm;
 use app\Entities\Managers\Forms\ManagerSearch;
+use app\Entities\Managers\Services\ManagerService;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,16 +16,23 @@ use yii\filters\VerbFilter;
  */
 class ManagersController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
+    public $layout = 'admin';
+
+    private ManagerService $service;
+
+    public function __construct($id,  $module, ManagerService $service,$config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->service = $service;
+    }
+
     public function behaviors()
     {
         return array_merge(
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -31,11 +41,7 @@ class ManagersController extends Controller
         );
     }
 
-    /**
-     * Lists all Managers models.
-     *
-     * @return string
-     */
+
     public function actionIndex()
     {
         $searchModel = new ManagerSearch();
@@ -47,54 +53,57 @@ class ManagersController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Managers model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        try{
+            return $this->render('view', [
+                'model' => $this->service->repository->one($id),
+            ]);
+        }catch (NotFoundHttpException $e) {
+            \Yii::error($e->getMessage());
+            return $this->redirect('index');
+        }
     }
 
-    /**
-     * Creates a new Managers model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        $model = new Managers();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        $form = new CreateForm();
+        try{
+            if ($this->request->isPost) {
+                if ($form->load($this->request->post()) && $form->validate()) {
+                    $manager = $this->service->create($form);
+                    return $this->redirect(['view', 'id' => $manager->id]);
+                }
             }
-        } else {
-            $model->loadDefaultValues();
+        }catch (BadRequestHttpException $e) {
+            \Yii::error($e->getMessage());
+            $form->addError('Что то пошло не так обратитесь к администратору');
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
-    /**
-     * Updates an existing Managers model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $form = new CreateForm($model);
+        try{
+            if ($this->request->isPost && $form->load($this->request->post()) && $form->validate()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } catch (BadRequestHttpException $e) {
+            \Yii::error($e->getMessage());
+            $form->addError('Что то пошло не так обратитесь к администратору');
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } catch (NotFoundHttpException  $e) {
+            \Yii::error($e->getMessage());
+            $form->addError('Событие не найдено');
+            return $this->redirect('index');
         }
 
         return $this->render('update', [
@@ -102,33 +111,14 @@ class ManagersController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Managers model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        try{
+            $this->service->repository->remove($id);
+        }catch (NotFoundHttpException $e) {
+            \Yii::error($e->getMessage());
+        }
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Managers model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Managers the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Managers::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 }

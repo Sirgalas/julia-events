@@ -11,13 +11,25 @@ use yii\base\Model;
  * @property string $date
  * @property string $description
  * @property string $name
+ *
  */
 class CreateForm extends Model
 {
+    public int $id;
+    public ?string $date = null;
+    public ?string $description = null;
+    public ?string $name = null;
 
-    public string $date;
-    public string $description;
-    public string $name;
+    public function __construct(Events $events = null, $config = [])
+    {
+        parent::__construct($config);
+        if($events) {
+            $this->id = $events->id;
+            $this->name = $events->name;
+            $this->date = $events->date;
+            $this->description = $events->description;
+        }
+    }
 
     public function rules()
     {

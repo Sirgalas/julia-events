@@ -10,7 +10,7 @@ use app\Entities\Managers\Repositories\ManagerRepository;
 
 class ManagerService
 {
-    private ManagerRepository $repository;
+    public ManagerRepository $repository;
 
     public function __construct(ManagerRepository $repository) {
 

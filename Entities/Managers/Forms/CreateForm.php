@@ -15,17 +15,19 @@ use yii\base\Model;
 
 class CreateForm extends Model
 {
+    public int $id;
     public string $name;
     public string $email;
     public string $phone;
 
-    public function __construct(Managers $managers = null, $config = [])
+    public function __construct(Managers $events = null, $config = [])
     {
         parent::__construct($config);
-        if($managers) {
-            $this->name = $managers->name;
-            $this->email = $managers->email;
-            $this->phone = $managers->phone;
+        if($events) {
+            $this->id = $events->id;
+            $this->name = $events->name;
+            $this->email = $events->email;
+            $this->phone = $events->phone;
         }
     }
 
