@@ -40,8 +40,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Events', 'url' => ['/events/index']],
             ['label' => 'Admin', 'url' => ['/admin/site/index']],
-
         ]
     ]);
     NavBar::end();

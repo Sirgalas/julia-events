@@ -1,5 +1,6 @@
 <?php
 
+use kartik\date\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -15,7 +16,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'date')->textInput() ?>
+    <?= $form->field($model, 'date', ['options'=>['class'=>'drp-container mb-2']])->widget(
+            DatePicker::class,
+            [
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-m-dd'
+                ]
+            ]);
+
+    $form->field($model, 'date')->textInput() ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 

@@ -40,4 +40,14 @@ class CreateForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'Название',
+            'date' => 'Дата',
+            'description' => 'Описание',
+        ];
+    }
+
 }

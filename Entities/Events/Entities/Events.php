@@ -4,6 +4,7 @@ namespace app\Entities\Events\Entities;
 
 use app\Entities\Events\Forms\CreateForm;
 use app\Entities\Managers\Entities\Managers;
+use app\Entities\Managers\Entities\ManagersEvents;
 use Yii;
 use yii\db\ActiveQuery;
 
@@ -16,6 +17,7 @@ use yii\db\ActiveQuery;
  * @property string|null $description
  *
  * @property Managers[] $managers
+ * @property ManagersEvents[] $managerEvents
  */
 class Events extends \yii\db\ActiveRecord
 {
@@ -44,16 +46,20 @@ class Events extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'date' => 'Date',
-            'description' => 'Description',
+            'name' => 'Название',
+            'date' => 'Дата',
+            'description' => 'Описание',
         ];
     }
 
-
     public function getManagers():ActiveQuery
     {
-        return $this->hasMany(Managers::class, ['id' => 'managers_id'])->viaTable('managers_events', ['events_id' => 'id']);
+        return $this->hasMany(Managers::class, ['id' => 'managers_id'])->via('managerEvents');
+    }
+
+    public function getManagerEvents(): ActiveQuery
+    {
+        return $this->hasMany(ManagersEvents::class,['events_id' => 'id']);
     }
 
 }

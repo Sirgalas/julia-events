@@ -16,6 +16,7 @@ use yii\db\ActiveQuery;
  * @property string|null $phone
  *
  * @property Events[] $events
+ * @property ManagersEvents[] $managerEvents
  */
 class Managers extends \yii\db\ActiveRecord
 {
@@ -50,7 +51,7 @@ class Managers extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'ФИО',
             'email' => 'Email',
             'phone' => 'Phone',
         ];
@@ -59,7 +60,12 @@ class Managers extends \yii\db\ActiveRecord
 
     public function getEvents():ActiveQuery
     {
-        return $this->hasMany(Events::class, ['id' => 'events_id'])->viaTable('managers_events', ['managers_id' => 'id']);
+        return $this->hasMany(Events::class, ['id' => 'events_id'])->via('managerEvents');
+    }
+
+    public function getManagerEvents(): ActiveQuery
+    {
+        return $this->hasMany(ManagersEvents::class,['managers_id' => 'id']);
     }
 
 

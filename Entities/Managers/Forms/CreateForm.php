@@ -15,10 +15,10 @@ use yii\base\Model;
 
 class CreateForm extends Model
 {
-    public int $id;
-    public string $name;
-    public string $email;
-    public string $phone;
+    public ?int $id = null;
+    public ?string $name = null;
+    public ?string $email = null;
+    public ?string $phone = null;
 
     public function __construct(Managers $events = null, $config = [])
     {
@@ -35,8 +35,18 @@ class CreateForm extends Model
     {
         return [
             [['name'], 'string', 'max' => 512],
-            [['email'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['phone'], 'string', 'max' => 20],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'ФИО',
+            'email' => 'Email',
+            'phone' => 'Phone',
         ];
     }
 }

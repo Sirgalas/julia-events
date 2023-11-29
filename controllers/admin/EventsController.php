@@ -3,9 +3,12 @@
 namespace app\controllers\admin;
 
 use app\Entities\Events\Entities\Events;
+use app\Entities\Events\Forms\ManagerForm;
 use app\Entities\Events\Services\EventService;
 use app\Entities\Events\Forms\CreateForm;
 use app\Entities\Events\Forms\EventSearch;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -45,6 +48,7 @@ class EventsController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'data' => ArrayHelper::map($this->service->managerRepository->findAllByCriteria(),'id','name')
         ]);
     }
 
@@ -86,6 +90,7 @@ class EventsController extends Controller
         try{
             if ($this->request->isPost && $form->load($this->request->post()) && $form->validate()) {
                 $this->service->update($model,$form);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } catch (BadRequestHttpException $e) {
             \Yii::error($e->getMessage());
@@ -96,7 +101,34 @@ class EventsController extends Controller
             return $this->redirect('index');
         }
         return $this->render('update', [
-            'model' => $model,
+            'model' => $form,
+        ]);
+    }
+
+    public function actionManagers($id)
+    {
+        $event = $this->service->repository->one($id);
+        $form = new ManagerForm();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $event->getManagers(),
+        ]);
+        try{
+            if($this->request->isPost && $form->load($this->request->post()) && $form->validate()) {
+                $this->service->addManager($event, $form);
+            }
+        }catch (NotFoundHttpException $e) {
+            \Yii::error($e->getMessage());
+            $form->addError('Событие не найдено');
+            return $this->redirect('index');
+        } catch (BadRequestHttpException $e) {
+            \Yii::error($e->getMessage());
+            $form->addError($e->getMessage());
+        }
+
+        return $this->render('managers',[
+            'dataProvider' => $dataProvider,
+            'model' => $form,
+            'data' => ArrayHelper::map($this->service->managerRepository->findAllByUnique($event),'id','name')
         ]);
     }
 
